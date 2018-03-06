@@ -28,7 +28,7 @@ $ gunicorn -b 127.0.0.1:5000 app:app
 
 ### Set up Nginx
 TO redirect traffic to local app, configure Nginx *.conf* file.
-
+```
 server{
     listen 80;
 
@@ -38,3 +38,4 @@ server{
         proxy_pass http://127.0.0.1:5000;
     }
 }
+```
