@@ -1,0 +1,48 @@
+# create a table in mysql
+Create table user_data
+(
+  id int(2) primary key auto_increment,
+  username text,
+  password text,
+  email text,
+  reg_date datetime
+)
+
+# Create username and password and email input fields.
+# Now pass all form data to server using ajax.
+<script type="text/javascript">
+    $(document).ready(function() {      
+      $('#sbtn').click(function(event) {
+        /* Act on the event */
+        $.ajax({
+          url: 'ajaxreg',
+          type: 'POST',
+          dataType: 'json',
+          data: {username:$('#username').val(),password:$('#password').val(),email:$('#email').val()},
+          success:function(json)
+          {
+            alert(json.result);
+          }
+        });
+      });
+    });
+</script>
+
+# catch all form values passed through ajax and save in database
+@app.route('/ajaxreg',methods=['POST', 'GET'])
+def ajaxreg():
+    if request.method=='POST':
+     username=request.form['username']
+     password=request.form['password']
+     email=request.form['email']
+     try:
+      with connection.cursor() as cursor:
+        sql="INSERT INTO user_data (username,password,email,reg_date) VALUES (%s, %s,%s,now())"
+        cursor.execute(sql, (username,password,email))
+        connection.commit()
+     finally:
+      connection.close()
+     return json.dumps({"result":"Saved successfully."})
+    else:
+      return "error"
+
